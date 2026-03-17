@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data KTP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">Manajemen Data KTP</h1>
+
+        <!-- Notification Area -->
+        <div id="notification" class="notification" style="display: none;"></div>
+
+        <!-- Form Section -->
+        <div class="card form-card">
+            <h2 class="section-title">Form Data KTP</h2>
+            <form id="ktpForm">
+                <input type="hidden" id="ktpId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomorKtp">Nomor KTP <span class="required">*</span></label>
+                        <input type="text" id="nomorKtp" name="nomorKtp" placeholder="Masukkan 16 digit NIK" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="namaLengkap">Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" id="namaLengkap" name="namaLengkap" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="alamat">Alamat <span class="required">*</span></label>
+                    <input type="text" id="alamat" name="alamat" placeholder="Masukkan alamat lengkap" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tanggalLahir">Tanggal Lahir <span class="required">*</span></label>
+                        <input type="date" id="tanggalLahir" name="tanggalLahir" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenisKelamin">Jenis Kelamin <span class="required">*</span></label>
+                        <select id="jenisKelamin" name="jenisKelamin" required>
+                            <option value="">-- Pilih Jenis Kelamin --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                        <span id="submitBtnText">Simpan</span>
+                    </button>
+                    <button type="button" id="cancelBtn" class="btn btn-secondary" style="display: none;">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Section -->
+        <div class="card table-card">
+            <h2 class="section-title">Daftar Data KTP</h2>
+            <div class="table-responsive">
+                <table id="ktpTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nomor KTP</th>
+                            <th>Nama Lengkap</th>
+                            <th>Alamat</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ktpTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-row">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
