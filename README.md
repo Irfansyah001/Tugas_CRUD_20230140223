@@ -1,20 +1,21 @@
 # KTP CRUD Application
 
-Aplikasi manajemen data KTP (Kartu Tanda Penduduk) Indonesia berbasis web dengan Spring Boot backend dan frontend HTML/CSS/JavaScript/jQuery.
+Aplikasi manajemen data KTP (Kartu Tanda Penduduk) Indonesia berbasis web full-stack dengan Spring Boot REST API backend dan frontend HTML/CSS/JavaScript/jQuery.
 
 ---
 
 ## Technology Stack
 
-| Layer     | Technology                          |
-|-----------|-------------------------------------|
-| Backend   | Spring Boot 3.2.5, Java 17          |
-| Database  | MySQL 8.x                           |
-| ORM       | Spring Data JPA / Hibernate         |
-| Validation| Spring Boot Validation (Jakarta)    |
-| Frontend  | HTML5, CSS3, JavaScript (ES6)       |
-| AJAX      | jQuery 3.7.1                        |
-| Build     | Apache Maven                        |
+| Layer      | Technology                           |
+|------------|--------------------------------------|
+| Backend    | Spring Boot 3.2.5, Java 17           |
+| Database   | MySQL 8.x                            |
+| ORM        | Spring Data JPA / Hibernate 6.4      |
+| Validasi   | Spring Boot Validation (Jakarta)     |
+| Frontend   | HTML5, CSS3, JavaScript ES6          |
+| AJAX       | jQuery 3.7.1                         |
+| Build Tool | Apache Maven 3.6+                    |
+| Env Config | spring-dotenv 4.0.0                  |
 
 ---
 
@@ -28,31 +29,32 @@ Aplikasi manajemen data KTP (Kartu Tanda Penduduk) Indonesia berbasis web dengan
 
 ## Database Setup
 
-1. Start your MySQL server.
-2. Create the database schema:
+1. Start MySQL server.
+2. Buat schema database:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS spring;
 ```
 
-3. The application uses root user with an empty password by default. To change this, edit `src/main/resources/application.properties`:
+3. Konfigurasi koneksi ada di file `.env` di root project:
 
-```properties
-spring.datasource.username=root
-spring.datasource.password=your_password
+```env
+DB_URL=jdbc:mysql://localhost:3306/spring
+DB_USERNAME=root
+DB_PASSWORD=your_password
 ```
 
-> The `ktp` table will be created automatically by Hibernate on first run (`ddl-auto=update`).
+> Tabel `ktp` akan dibuat otomatis oleh Hibernate saat aplikasi pertama kali dijalankan (`ddl-auto=update`).
 
 ---
 
-## Running the Application
+## Cara Menjalankan
 
 ```bash
 mvn spring-boot:run
 ```
 
-Then open your browser and navigate to:
+Kemudian buka browser dan akses:
 
 ```
 http://localhost:8080
@@ -60,32 +62,219 @@ http://localhost:8080
 
 ---
 
+## Project Structure
+
+```
+praktikum2/
+├── .env                                        # Kredensial database (tidak di-push ke Git)
+├── .env.example                                # Template .env untuk referensi
+├── pom.xml                                     # Maven dependencies & build config
+├── README.md
+└── src/
+    ├── main/
+    │   ├── java/com/deploy/praktikum2/
+    │   │   ├── Praktikum2Application.java       # Entry point @SpringBootApplication
+    │   │   ├── controller/
+    │   │   │   └── KtpController.java           # REST Controller — 5 endpoint CRUD
+    │   │   ├── dto/
+    │   │   │   ├── KtpRequest.java              # Request payload (dengan validasi)
+    │   │   │   └── KtpResponse.java             # Response payload
+    │   │   ├── exception/
+    │   │   │   ├── DuplicateResourceException.java   # Exception 409 Conflict
+    │   │   │   ├── GlobalExceptionHandler.java       # @RestControllerAdvice
+    │   │   │   └── ResourceNotFoundException.java    # Exception 404 Not Found
+    │   │   ├── mapper/
+    │   │   │   └── KtpMapper.java               # Konversi Entity ↔ DTO
+    │   │   ├── model/
+    │   │   │   └── Ktp.java                     # JPA Entity → tabel `ktp`
+    │   │   ├── repository/
+    │   │   │   └── KtpRepository.java           # Spring Data JPA Repository
+    │   │   ├── service/
+    │   │   │   ├── KtpService.java              # Service interface
+    │   │   │   └── impl/
+    │   │   │       └── KtpServiceImpl.java      # Implementasi business logic
+    │   │   └── util/
+    │   │       └── ApiResponse.java             # Generic response wrapper
+    │   └── resources/
+    │       ├── application.properties           # Konfigurasi server & database
+    │       └── static/
+    │           ├── index.html                   # Halaman utama SPA
+    │           ├── style.css                    # Styling
+    │           └── script.js                    # jQuery AJAX CRUD
+    └── test/
+        └── java/com/deploy/praktikum2/
+            └── Praktikum2ApplicationTests.java
+```
+
+---
+
+## Struktur Database
+
+### Tabel: `ktp`
+
+| Kolom           | Tipe MySQL      | Constraint                  |
+|-----------------|-----------------|-----------------------------|
+| `id`            | INT             | PRIMARY KEY, AUTO_INCREMENT |
+| `nomor_ktp`     | VARCHAR(255)    | NOT NULL, UNIQUE            |
+| `nama_lengkap`  | VARCHAR(255)    | NOT NULL                    |
+| `alamat`        | VARCHAR(255)    | NOT NULL                    |
+| `tanggal_lahir` | DATE            | NOT NULL                    |
+| `jenis_kelamin` | VARCHAR(255)    | NOT NULL                    |
+
+---
+
 ## API Documentation
 
-### Base URL: `http://localhost:8080/ktp`
+### Base URL
 
-| Method | Endpoint      | Description               | Request Body              | Response                        |
-|--------|---------------|---------------------------|---------------------------|---------------------------------|
-| POST   | `/ktp`        | Create a new KTP record   | `KtpRequest` (JSON)       | `ApiResponse<KtpResponse>` 201  |
-| GET    | `/ktp`        | Get all KTP records       | —                         | `ApiResponse<List<KtpResponse>>` 200 |
-| GET    | `/ktp/{id}`   | Get a KTP record by ID    | —                         | `ApiResponse<KtpResponse>` 200  |
-| PUT    | `/ktp/{id}`   | Update a KTP record by ID | `KtpRequest` (JSON)       | `ApiResponse<KtpResponse>` 200  |
-| DELETE | `/ktp/{id}`   | Delete a KTP record by ID | —                         | `ApiResponse<null>` 200         |
+```
+http://localhost:8080/ktp
+```
 
-### KtpRequest Body (POST / PUT)
+### Format Response Umum (`ApiResponse<T>`)
+
+Semua endpoint mengembalikan response dengan struktur berikut:
 
 ```json
 {
-  "nomorKtp": "3201010101010001",
+  "status":  <integer: HTTP status code>,
+  "message": <string: pesan deskriptif>,
+  "data":    <object | array | null>
+}
+```
+
+---
+
+### 1. Tambah Data KTP
+
+```
+POST /ktp
+```
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "nomorKtp":    "3201010101010001",
   "namaLengkap": "Budi Santoso",
-  "alamat": "Jl. Merdeka No. 1, Jakarta",
-  "tanggalLahir": "1990-01-01",
+  "alamat":      "Jl. Merdeka No. 1, Jakarta",
+  "tanggalLahir": "1990-01-15",
   "jenisKelamin": "Laki-laki"
 }
 ```
 
-### KtpResponse
+| Field          | Tipe     | Wajib | Keterangan                        |
+|----------------|----------|-------|-----------------------------------|
+| `nomorKtp`     | String   | Ya    | Harus unik, tidak boleh kosong    |
+| `namaLengkap`  | String   | Ya    | Tidak boleh kosong                |
+| `alamat`       | String   | Ya    | Tidak boleh kosong                |
+| `tanggalLahir` | String   | Ya    | Format: `yyyy-MM-dd`              |
+| `jenisKelamin` | String   | Ya    | `"Laki-laki"` atau `"Perempuan"`  |
 
+**Response Sukses — `201 Created`:**
+```json
+{
+  "status": 201,
+  "message": "Data KTP berhasil ditambahkan",
+  "data": {
+    "id": 1,
+    "nomorKtp": "3201010101010001",
+    "namaLengkap": "Budi Santoso",
+    "alamat": "Jl. Merdeka No. 1, Jakarta",
+    "tanggalLahir": "1990-01-15",
+    "jenisKelamin": "Laki-laki"
+  }
+}
+```
+
+**Response Error — `409 Conflict` (nomorKtp sudah terdaftar):**
+```json
+{
+  "status": 409,
+  "message": "KTP dengan nomorKtp '3201010101010001' sudah ada",
+  "data": null
+}
+```
+
+**Response Error — `400 Bad Request` (validasi gagal):**
+```json
+{
+  "status": 400,
+  "message": "Validasi gagal. Periksa kembali data yang diinputkan.",
+  "data": {
+    "nomorKtp": "Nomor KTP tidak boleh kosong",
+    "namaLengkap": "Nama lengkap tidak boleh kosong",
+    "tanggalLahir": "Tanggal lahir tidak boleh kosong"
+  }
+}
+```
+
+---
+
+### 2. Ambil Semua Data KTP
+
+```
+GET /ktp
+```
+
+**Request Body:** Tidak ada
+
+**Response Sukses — `200 OK` (data tersedia):**
+```json
+{
+  "status": 200,
+  "message": "Data KTP berhasil diambil",
+  "data": [
+    {
+      "id": 1,
+      "nomorKtp": "3201010101010001",
+      "namaLengkap": "Budi Santoso",
+      "alamat": "Jl. Merdeka No. 1, Jakarta",
+      "tanggalLahir": "1990-01-15",
+      "jenisKelamin": "Laki-laki"
+    },
+    {
+      "id": 2,
+      "nomorKtp": "3274015502980002",
+      "namaLengkap": "Siti Rahayu",
+      "alamat": "Jl. Sudirman No. 45, Bandung",
+      "tanggalLahir": "1998-02-15",
+      "jenisKelamin": "Perempuan"
+    }
+  ]
+}
+```
+
+**Response Sukses — `200 OK` (data kosong):**
+```json
+{
+  "status": 200,
+  "message": "Data KTP berhasil diambil",
+  "data": []
+}
+```
+
+---
+
+### 3. Ambil Data KTP Berdasarkan ID
+
+```
+GET /ktp/{id}
+```
+
+**Path Variable:**
+
+| Parameter | Tipe    | Keterangan        |
+|-----------|---------|-------------------|
+| `id`      | Integer | ID record KTP     |
+
+**Request Body:** Tidak ada
+
+**Response Sukses — `200 OK`:**
 ```json
 {
   "status": 200,
@@ -95,80 +284,203 @@ http://localhost:8080
     "nomorKtp": "3201010101010001",
     "namaLengkap": "Budi Santoso",
     "alamat": "Jl. Merdeka No. 1, Jakarta",
-    "tanggalLahir": "1990-01-01",
+    "tanggalLahir": "1990-01-15",
     "jenisKelamin": "Laki-laki"
   }
 }
 ```
 
-### Error Responses
-
-| HTTP Status | Scenario                        |
-|-------------|---------------------------------|
-| 400         | Validation failed               |
-| 404         | KTP record not found            |
-| 409         | Duplicate nomorKtp              |
-| 500         | Internal server error           |
+**Response Error — `404 Not Found` (ID tidak ditemukan):**
+```json
+{
+  "status": 404,
+  "message": "KTP dengan id 99 tidak ditemukan",
+  "data": null
+}
+```
 
 ---
 
-## Project Structure
+### 4. Perbarui Data KTP
 
 ```
-src/
-├── main/
-│   ├── java/com/example/ktpcrud/
-│   │   ├── KtpCrudApplication.java       # Spring Boot entry point
-│   │   ├── model/
-│   │   │   └── Ktp.java                  # JPA Entity mapped to table `ktp`
-│   │   ├── dto/
-│   │   │   ├── KtpRequest.java           # Incoming request payload (with validation)
-│   │   │   └── KtpResponse.java          # Outgoing response payload
-│   │   ├── repository/
-│   │   │   └── KtpRepository.java        # Spring Data JPA repository interface
-│   │   ├── service/
-│   │   │   ├── KtpService.java           # Service interface
-│   │   │   └── impl/
-│   │   │       └── KtpServiceImpl.java   # Business logic implementation
-│   │   ├── mapper/
-│   │   │   └── KtpMapper.java            # Manual mapper: Entity <-> DTO
-│   │   ├── controller/
-│   │   │   └── KtpController.java        # REST controller (5 endpoints)
-│   │   ├── util/
-│   │   │   └── ApiResponse.java          # Generic API response wrapper
-│   │   └── exception/
-│   │       ├── ResourceNotFoundException.java    # 404 exception
-│   │       ├── DuplicateResourceException.java   # 409 exception
-│   │       └── GlobalExceptionHandler.java       # @RestControllerAdvice handler
-│   └── resources/
-│       ├── application.properties        # Database & server config
-│       └── static/
-│           ├── index.html                # Single-page frontend UI
-│           ├── style.css                 # Styling
-│           └── script.js                 # jQuery AJAX CRUD logic
-└── test/
-    └── java/com/example/ktpcrud/
-        └── KtpCrudApplicationTests.java  # Spring Boot context test
+PUT /ktp/{id}
 ```
+
+**Path Variable:**
+
+| Parameter | Tipe    | Keterangan              |
+|-----------|---------|-------------------------|
+| `id`      | Integer | ID record yang diperbarui|
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Request Body:** (sama seperti POST)
+```json
+{
+  "nomorKtp":    "3201010101010001",
+  "namaLengkap": "Budi Santoso Updated",
+  "alamat":      "Jl. Kebangsaan No. 10, Jakarta",
+  "tanggalLahir": "1990-01-15",
+  "jenisKelamin": "Laki-laki"
+}
+```
+
+**Response Sukses — `200 OK`:**
+```json
+{
+  "status": 200,
+  "message": "Data KTP berhasil diperbarui",
+  "data": {
+    "id": 1,
+    "nomorKtp": "3201010101010001",
+    "namaLengkap": "Budi Santoso Updated",
+    "alamat": "Jl. Kebangsaan No. 10, Jakarta",
+    "tanggalLahir": "1990-01-15",
+    "jenisKelamin": "Laki-laki"
+  }
+}
+```
+
+**Response Error — `404 Not Found` (ID tidak ditemukan):**
+```json
+{
+  "status": 404,
+  "message": "KTP dengan id 99 tidak ditemukan",
+  "data": null
+}
+```
+
+**Response Error — `409 Conflict` (nomorKtp milik data lain):**
+```json
+{
+  "status": 409,
+  "message": "KTP dengan nomorKtp '3274015502980002' sudah ada",
+  "data": null
+}
+```
+
+**Response Error — `400 Bad Request` (validasi gagal):**
+```json
+{
+  "status": 400,
+  "message": "Validasi gagal. Periksa kembali data yang diinputkan.",
+  "data": {
+    "alamat": "Alamat tidak boleh kosong"
+  }
+}
+```
+
+---
+
+### 5. Hapus Data KTP
+
+```
+DELETE /ktp/{id}
+```
+
+**Path Variable:**
+
+| Parameter | Tipe    | Keterangan          |
+|-----------|---------|---------------------|
+| `id`      | Integer | ID record yang dihapus|
+
+**Request Body:** Tidak ada
+
+**Response Sukses — `200 OK`:**
+```json
+{
+  "status": 200,
+  "message": "Data KTP berhasil dihapus",
+  "data": null
+}
+```
+
+**Response Error — `404 Not Found` (ID tidak ditemukan):**
+```json
+{
+  "status": 404,
+  "message": "KTP dengan id 99 tidak ditemukan",
+  "data": null
+}
+```
+
+---
+
+### Ringkasan Semua Endpoint
+
+| Method   | Endpoint      | Deskripsi                    | HTTP Sukses | HTTP Error         |
+|----------|---------------|------------------------------|-------------|--------------------|
+| `POST`   | `/ktp`        | Tambah data KTP baru         | `201`       | `400`, `409`       |
+| `GET`    | `/ktp`        | Ambil semua data KTP         | `200`       | `500`              |
+| `GET`    | `/ktp/{id}`   | Ambil data KTP berdasarkan ID| `200`       | `404`              |
+| `PUT`    | `/ktp/{id}`   | Perbarui data KTP            | `200`       | `400`, `404`, `409`|
+| `DELETE` | `/ktp/{id}`   | Hapus data KTP               | `200`       | `404`              |
+
+### Daftar HTTP Status Code
+
+| Status | Arti                  | Kondisi                                              |
+|--------|-----------------------|------------------------------------------------------|
+| `200`  | OK                    | GET / PUT / DELETE berhasil                          |
+| `201`  | Created               | POST berhasil membuat data baru                      |
+| `400`  | Bad Request           | Field wajib kosong atau format tidak valid           |
+| `404`  | Not Found             | ID yang diminta tidak ditemukan di database          |
+| `409`  | Conflict              | nomorKtp sudah terdaftar di data lain                |
+| `500`  | Internal Server Error | Kesalahan tak terduga di sisi server                 |
 
 ---
 
 ## Screenshots
 
-### Form Input KTP
-> _Screenshot: Form untuk menambahkan atau mengedit data KTP_
+---
 
-### Tabel Data KTP
-> _Screenshot: Tabel yang menampilkan seluruh data KTP_
+### 1. Tampilan Utama — Form Input KTP
 
-### Notifikasi Sukses
-> _Screenshot: Notifikasi hijau yang muncul saat operasi berhasil_
+> Tampilan halaman utama dengan form input data KTP dalam kondisi kosong (mode tambah data baru).
 
-### Notifikasi Error
-> _Screenshot: Notifikasi merah yang muncul saat terjadi kesalahan_
+<!-- SCREENSHOT: Form Input KTP (kosong, mode Simpan) -->
 
-### Edit Mode
-> _Screenshot: Form dalam mode edit dengan tombol "Update" dan "Batal"_
+---
 
-### Konfirmasi Hapus
-> _Screenshot: Dialog konfirmasi sebelum menghapus data_
+### 2. Tabel Data KTP
+
+> Tabel yang menampilkan seluruh data KTP yang sudah tersimpan di database, lengkap dengan tombol Edit dan Hapus.
+
+<!-- SCREENSHOT: Tabel Data KTP (terisi beberapa data) -->
+
+---
+
+### 3. Notifikasi Sukses
+
+> Notifikasi hijau yang muncul di bagian atas halaman setelah operasi tambah, edit, atau hapus data berhasil.
+
+<!-- SCREENSHOT: Notifikasi hijau "Data KTP berhasil ditambahkan" -->
+
+---
+
+### 4. Notifikasi Error
+
+> Notifikasi merah yang muncul ketika terjadi kesalahan, misalnya Nomor KTP sudah terdaftar atau field wajib dikosongkan.
+
+<!-- SCREENSHOT: Notifikasi merah pesan error -->
+
+---
+
+### 5. Mode Edit
+
+> Form dalam kondisi mode edit: field terisi data yang dipilih, tombol submit berubah menjadi "Update", dan tombol "Batal" muncul.
+
+<!-- SCREENSHOT: Form mode Edit (tombol Update & Batal terlihat) -->
+
+---
+
+### 6. Konfirmasi Hapus
+
+> Dialog konfirmasi browser yang muncul sebelum data dihapus untuk mencegah penghapusan tidak disengaja.
+
+<!-- SCREENSHOT: Dialog konfirmasi "Apakah Anda yakin ingin menghapus data ini?" -->
+
+---
