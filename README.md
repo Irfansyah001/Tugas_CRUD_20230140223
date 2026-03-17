@@ -441,7 +441,7 @@ DELETE /ktp/{id}
 
 > Tampilan halaman utama dengan form input data KTP dalam kondisi kosong (mode tambah data baru).
 
-<!-- SCREENSHOT: Form Input KTP (kosong, mode Simpan) -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d50ea295-f0ef-43e7-8026-7fc74ad5fcb0" />
 
 ---
 
@@ -449,7 +449,7 @@ DELETE /ktp/{id}
 
 > Tabel yang menampilkan seluruh data KTP yang sudah tersimpan di database, lengkap dengan tombol Edit dan Hapus.
 
-<!-- SCREENSHOT: Tabel Data KTP (terisi beberapa data) -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/80ec549b-3756-443b-b811-a0e944f9abb6" />
 
 ---
 
@@ -457,7 +457,11 @@ DELETE /ktp/{id}
 
 > Notifikasi hijau yang muncul di bagian atas halaman setelah operasi tambah, edit, atau hapus data berhasil.
 
-<!-- SCREENSHOT: Notifikasi hijau "Data KTP berhasil ditambahkan" -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8508e372-9329-442d-9710-b52b22a0e1f6" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/51b37d1b-324d-4bfb-bdc2-2f2860e67147" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7128c643-7211-4a46-9062-3f4652f30343" />
 
 ---
 
@@ -465,7 +469,7 @@ DELETE /ktp/{id}
 
 > Notifikasi merah yang muncul ketika terjadi kesalahan, misalnya Nomor KTP sudah terdaftar atau field wajib dikosongkan.
 
-<!-- SCREENSHOT: Notifikasi merah pesan error -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/24b988e2-6ba7-4d6c-abe4-185f4af981ff" />
 
 ---
 
@@ -473,7 +477,7 @@ DELETE /ktp/{id}
 
 > Form dalam kondisi mode edit: field terisi data yang dipilih, tombol submit berubah menjadi "Update", dan tombol "Batal" muncul.
 
-<!-- SCREENSHOT: Form mode Edit (tombol Update & Batal terlihat) -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/80dbc002-9c1b-483c-873c-8dd8310cd959" />
 
 ---
 
@@ -481,6 +485,6 @@ DELETE /ktp/{id}
 
 > Dialog konfirmasi browser yang muncul sebelum data dihapus untuk mencegah penghapusan tidak disengaja.
 
-<!-- SCREENSHOT: Dialog konfirmasi "Apakah Anda yakin ingin menghapus data ini?" -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/32ff4c7e-5a50-4495-b5c4-243c31da7a2f" />
 
 ---
