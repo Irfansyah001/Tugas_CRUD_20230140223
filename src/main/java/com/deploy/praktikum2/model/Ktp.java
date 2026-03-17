@@ -2,15 +2,9 @@ package com.deploy.praktikum2.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "ktp")
 public class Ktp {
@@ -34,4 +28,33 @@ public class Ktp {
 
     @Column(nullable = false)
     private String jenisKelamin;
+
+    public Ktp() {}
+
+    public Ktp(Integer id, String nomorKtp, String namaLengkap, String alamat, LocalDate tanggalLahir, String jenisKelamin) {
+        this.id = id;
+        this.nomorKtp = nomorKtp;
+        this.namaLengkap = namaLengkap;
+        this.alamat = alamat;
+        this.tanggalLahir = tanggalLahir;
+        this.jenisKelamin = jenisKelamin;
+    }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public String getNomorKtp() { return nomorKtp; }
+    public void setNomorKtp(String nomorKtp) { this.nomorKtp = nomorKtp; }
+
+    public String getNamaLengkap() { return namaLengkap; }
+    public void setNamaLengkap(String namaLengkap) { this.namaLengkap = namaLengkap; }
+
+    public String getAlamat() { return alamat; }
+    public void setAlamat(String alamat) { this.alamat = alamat; }
+
+    public LocalDate getTanggalLahir() { return tanggalLahir; }
+    public void setTanggalLahir(LocalDate tanggalLahir) { this.tanggalLahir = tanggalLahir; }
+
+    public String getJenisKelamin() { return jenisKelamin; }
+    public void setJenisKelamin(String jenisKelamin) { this.jenisKelamin = jenisKelamin; }
 }
