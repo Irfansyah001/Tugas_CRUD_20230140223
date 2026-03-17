@@ -147,6 +147,8 @@ Semua endpoint mengembalikan response dengan struktur berikut:
 
 ### 1. Tambah Data KTP
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2b710867-b8fa-4350-9797-c58606dd78f9" />
+
 ```
 POST /ktp
 ```
@@ -217,6 +219,8 @@ Content-Type: application/json
 
 ### 2. Ambil Semua Data KTP
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f2819356-64aa-4bce-9292-2aa165a24ebd" />
+
 ```
 GET /ktp
 ```
@@ -262,6 +266,8 @@ GET /ktp
 
 ### 3. Ambil Data KTP Berdasarkan ID
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ab6ab8bb-58f9-4947-a71d-25e916f28d71" />
+
 ```
 GET /ktp/{id}
 ```
@@ -302,6 +308,8 @@ GET /ktp/{id}
 ---
 
 ### 4. Perbarui Data KTP
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dd612075-46d1-4fad-a086-3531b5dc13f4" />
 
 ```
 PUT /ktp/{id}
@@ -377,6 +385,8 @@ Content-Type: application/json
 ---
 
 ### 5. Hapus Data KTP
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c1955bd9-5c99-4a33-a6bc-f825c6c59e60" />
 
 ```
 DELETE /ktp/{id}
@@ -486,5 +496,13 @@ DELETE /ktp/{id}
 > Dialog konfirmasi browser yang muncul sebelum data dihapus untuk mencegah penghapusan tidak disengaja.
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/32ff4c7e-5a50-4495-b5c4-243c31da7a2f" />
+
+---
+
+## MySQL Database
+
+### 1. Screenshot tampilan spring database
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a314a126-90a3-46f9-9156-a8ea10bcc381" />
 
 ---
