@@ -1,13 +1,5 @@
 package com.deploy.praktikum2;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
+// Placeholder test class - main tests are in com.example.ktpcrud package
 class Praktikum2ApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
 }
